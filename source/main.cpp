@@ -1,5 +1,8 @@
 #include "framework/engine.h"
 #include "framework/utils.h"
+#include "GameTimer.h"
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/spline.hpp>
 
 using namespace std;
 using namespace glm;
@@ -57,9 +60,43 @@ int main()
 	}
 	LineDrawer path_drawer(path, points.size(), true);
 
+	Mesh cubeMesh = createCube();
+	Object* cube = engine->createObject(&cubeMesh);
+	cube->setColor(0.7f, 0.7f, 0.7f);
+	cube->setPosition(0.0f, 0.0f, 0.0f);
+	cube->setScale(0.5f);
+
+	glm::vec3 pos1{ 0.0f, -0.375f,  7.0f };
+	glm::vec3 pos2{ -6.0f, -0.375f,  5.0f };
+	glm::vec3 pos3{ -8.0f, -0.375f,  1.0f };
+	glm::vec3 pos4{ -4.0f, -0.375f, -6.0f };
+	glm::vec3 pos5{ 0.0f, -0.375f, -7.0f };
+	glm::vec3 pos6{ 1.0f, -0.375f, -4.0f };
+	glm::vec3 pos7{ 4.0f, -0.375f, -3.0f };
+	glm::vec3 pos8{ 8.0f, -0.375f,  7.0f };
+
+	int point = 1;
+	float s = 0.0f;
+	
+	GameTimer timer;
+
 	// main loop
 	while (!engine->isDone())
 	{
+		timer.Tick();
+		glm::vec3  cubePos = glm::catmullRom(pos1, pos2, pos3, pos4, s);
+		cube->setPosition(cubePos);
+		if (s < 1.0f)
+		{
+			float speed =  timer.GetDeltaTime();
+			s += speed;
+		}
+		else
+		{
+			s = 0.0f;
+		}
+
+
 		engine->update();
 		engine->render();
 
