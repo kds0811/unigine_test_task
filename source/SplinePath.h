@@ -24,4 +24,8 @@ public:
 private:
 	std::array<glm::vec3, NumPointsInSegment> GetSplinePoints(const glm::vec3& v1, const glm::vec3& v2, const glm::vec3& v3, const glm::vec3& v4, float step);
 	void BuildAllSplinePathPoints(const std::vector<glm::vec3>& pathPoints);
+
+	std::vector<float> ComputeArcLengths(const std::vector<glm::vec3>& splinePoints);
+	void ResampleSplinePoints(float desiredDistance);
+	glm::vec3 GetPositionAtArcLength(const std::vector<glm::vec3>& splinePoints, const std::vector<float>& arcLengths, float currentArcLength);
 };

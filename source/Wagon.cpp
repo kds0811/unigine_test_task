@@ -20,9 +20,8 @@ void Wagon::Init(Engine* engine, Mesh* mesh, const glm::vec3& startPos, int dest
 	pObject->setColor(0.7f, 0.7f, 0.7f);
 	pObject->setScale(0.4f);
 	pObject->setPosition(startPos);
-	mForwardVector = glm::normalize(mDestinationPosition - pObject->getPosition());
+	mForwardVector = CalculateDirectionVecToDest();
 	pObject->setRotation(CalculateDirectionQuat(mForwardVector));
-
 }
 
 void Wagon::Update(float deltaTime)
@@ -56,21 +55,33 @@ void Wagon::UpdateMovement(float deltaTime)
 			++indexOffset;
 		}
 		CalculateOffsetAndSetPosition(vecToDestination, deltaTime);
+		StartRotation();
 	}
 }
 
 void Wagon::UpdateRotation(float deltaTime)
 {
-	glm::vec3 vecToDestination = CalculateDirectionVecToDest();
+	if (!mIsRotating) return;
 
+	mCurrentProgress += mRotationSpeed * deltaTime;
 
-	//pObject->setRotation(CalculateDirectionQuat(mDestinationDirection));
+	if (mCurrentProgress >= 1.0f)
+	{
+		mCurrentProgress = 1.0f;
+		mIsRotating = false; 
+	}
+
+	glm::quat startQuat = glm::quat(glm::vec3{ 0.0f, mStartYaw, 0.0f });
+	glm::quat destQuat = glm::quat(glm::vec3{ 0.0f, mDestYaw, 0.0f });
+	glm::quat currentQuat = glm::slerp(startQuat, destQuat, mCurrentProgress);
+
+	pObject->setRotation(currentQuat);
 }
 
 glm::quat Wagon::CalculateDirectionQuat(const glm::vec3& direction)
 {
-	float yawRad = glm::atan(-direction.z, direction.x);
-	return glm::quat(glm::vec3{ 0.0f, yawRad, 0.0f });
+	// Quaternion is created only with yaw angle because the rotation is in the X-Z plane around the Y axis.
+	return glm::quat(glm::vec3{ 0.0f, CalculateYawFromVector(direction), 0.0f});
 }
 
 bool Wagon::DestinationIsFront(const glm::vec3& vecToDest) const
@@ -82,10 +93,43 @@ void Wagon::CalculateOffsetAndSetPosition(const glm::vec3& vecToDest, float delt
 {
 	glm::vec3 offset = vecToDest * deltaTime * mSpeed;
 	pObject->setPosition(pObject->getPosition() + offset);
+	mForwardVector = vecToDest;
 }
 
 glm::vec3 Wagon::CalculateDirectionVecToDest() const
 {
 	return glm::normalize(mDestinationPosition - pObject->getPosition());
+}
+
+void Wagon::StartRotation()
+{
+	mStartYaw = CalculateYawFromVector(mForwardVector);;
+	mDestYaw = CalculateYawFromVector(CalculateDirectionVecToDest());
+
+	float deltaYaw = mDestYaw - mStartYaw;
+	if (deltaYaw > glm::pi<float>())
+	{
+		deltaYaw -= 2.0f * glm::pi<float>();
+	}
+	else if (deltaYaw < -glm::pi<float>())
+	{
+		deltaYaw += 2.0f * glm::pi<float>();
+	}
+	mDestYaw = mStartYaw + deltaYaw;
+
+	mCurrentProgress = 0.0f;
+	mIsRotating = true;
+}
+
+float Wagon::CalculateYawFromVector(const glm::vec3& vec)
+{
+	float yaw = glm::atan(-vec.z, vec.x); // -z because the base z-axis points backward;
+
+	if (yaw < 0.0f)
+	{
+		yaw += 2.0f * glm::pi<float>();
+	}
+
+	return yaw;
 }
 

@@ -9,7 +9,7 @@ class Engine;
 class Train
 {
 	static constexpr size_t mNumWagons = 8;
-	static constexpr size_t mWagonsDistance = 10;
+	static constexpr size_t mWagonsDistance = 50;
 	std::array<Wagon, mNumWagons> mWagons{};
 
 public:
