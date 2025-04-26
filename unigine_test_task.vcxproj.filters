@@ -78,10 +78,13 @@
     <ClCompile Include="source\GameTimer.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="Carriage.cpp">
+    <ClCompile Include="source\Carriage.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="CarriageMovementComponent.cpp">
+    <ClCompile Include="source\CarriageMovementComponent.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SplinePath.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1252,10 +1255,13 @@
     <ClInclude Include="source\GameTimer.h">
       <Filter>source</Filter>
     </ClInclude>
-    <ClInclude Include="Carriage.h">
+    <ClInclude Include="source\Carriage.h">
       <Filter>source</Filter>
     </ClInclude>
-    <ClInclude Include="CarriageMovementComponent.h">
+    <ClInclude Include="source\CarriageMovementComponent.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SplinePath.h">
       <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>

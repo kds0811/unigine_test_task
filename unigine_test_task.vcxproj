@@ -59,7 +59,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MinimalRebuild>false</MinimalRebuild>
@@ -79,7 +79,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -92,10 +92,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Carriage.cpp" />
-    <ClCompile Include="CarriageMovementComponent.cpp" />
     <ClCompile Include="include\glm\detail\glm.cpp" />
     <ClCompile Include="source/main.cpp" />
+    <ClCompile Include="source\Carriage.cpp" />
+    <ClCompile Include="source\CarriageMovementComponent.cpp" />
     <ClCompile Include="source\framework\camera.cpp" />
     <ClCompile Include="source\framework\engine.cpp" />
     <ClCompile Include="source\framework\filesystem.cpp" />
@@ -105,6 +105,7 @@
     <ClCompile Include="source\framework\shader.cpp" />
     <ClCompile Include="source\framework\utils.cpp" />
     <ClCompile Include="source\GameTimer.cpp" />
+    <ClCompile Include="source\SplinePath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shader.frag" />
@@ -242,8 +243,6 @@
     <None Include="include\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Carriage.h" />
-    <ClInclude Include="CarriageMovementComponent.h" />
     <ClInclude Include="include\glad\glad.h" />
     <ClInclude Include="include\GLFW\glfw3.h" />
     <ClInclude Include="include\GLFW\glfw3native.h" />
@@ -491,6 +490,8 @@
     <ClInclude Include="include\GL\glxew.h" />
     <ClInclude Include="include\GL\wglew.h" />
     <ClInclude Include="include\KHR\khrplatform.h" />
+    <ClInclude Include="source\Carriage.h" />
+    <ClInclude Include="source\CarriageMovementComponent.h" />
     <ClInclude Include="source\framework\camera.h" />
     <ClInclude Include="source\framework\engine.h" />
     <ClInclude Include="source\framework\filesystem.h" />
@@ -499,6 +500,7 @@
     <ClInclude Include="source\framework\shader.h" />
     <ClInclude Include="source\framework\utils.h" />
     <ClInclude Include="source\GameTimer.h" />
+    <ClInclude Include="source\SplinePath.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
