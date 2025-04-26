@@ -95,7 +95,6 @@
     <ClCompile Include="include\glm\detail\glm.cpp" />
     <ClCompile Include="source/main.cpp" />
     <ClCompile Include="source\Carriage.cpp" />
-    <ClCompile Include="source\CarriageMovementComponent.cpp" />
     <ClCompile Include="source\framework\camera.cpp" />
     <ClCompile Include="source\framework\engine.cpp" />
     <ClCompile Include="source\framework\filesystem.cpp" />
@@ -104,8 +103,8 @@
     <ClCompile Include="source\framework\object.cpp" />
     <ClCompile Include="source\framework\shader.cpp" />
     <ClCompile Include="source\framework\utils.cpp" />
-    <ClCompile Include="source\GameTimer.cpp" />
     <ClCompile Include="source\SplinePath.cpp" />
+    <ClCompile Include="source\Train.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shader.frag" />
@@ -491,7 +490,6 @@
     <ClInclude Include="include\GL\wglew.h" />
     <ClInclude Include="include\KHR\khrplatform.h" />
     <ClInclude Include="source\Carriage.h" />
-    <ClInclude Include="source\CarriageMovementComponent.h" />
     <ClInclude Include="source\framework\camera.h" />
     <ClInclude Include="source\framework\engine.h" />
     <ClInclude Include="source\framework\filesystem.h" />
@@ -499,8 +497,8 @@
     <ClInclude Include="source\framework\object.h" />
     <ClInclude Include="source\framework\shader.h" />
     <ClInclude Include="source\framework\utils.h" />
-    <ClInclude Include="source\GameTimer.h" />
     <ClInclude Include="source\SplinePath.h" />
+    <ClInclude Include="source\Train.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

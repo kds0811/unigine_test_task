@@ -1,7 +1,7 @@
 #include "framework/engine.h"
 #include "framework/utils.h"
-#include "GameTimer.h"
 #include "SplinePath.h"
+#include "Train.h"
 
 using namespace std;
 using namespace glm;
@@ -22,7 +22,7 @@ int main()
 
 	// set up camera
 	Camera& cam = engine->getCamera();
-	cam.Position = vec3(0.0f, 12.0f, 17.0f);
+	cam.Position = glm::vec3(0.0f, 12.0f, 17.0f);
 	cam.Yaw = -90.0f;
 	cam.Pitch = -45.0f;
 	cam.UpdateCameraVectors();
@@ -60,14 +60,10 @@ int main()
 	}
 	LineDrawer path_drawer(path, points.size(), true);
 
-	Mesh cubeMesh = createCube();
-	Object* cube = engine->createObject(&cubeMesh);
-	cube->setColor(0.7f, 0.7f, 0.7f);
-	vec3 CubePosition = { 0.0f, 0.0f, 0.0f };
-	cube->setPosition(0.0f, 0.0f, 0.0f);
-	cube->setScale(0.5f);
 
-	std::vector<vec3> positions{};
+
+
+	std::vector<glm::vec3> positions{};
 
 	positions.push_back(glm::vec3{ 0.0f, -0.375f,  7.0f });
 	positions.push_back(glm::vec3{ -6.0f, -0.375f,  5.0f });
@@ -83,14 +79,14 @@ int main()
 	int point = 1;
 	float s = 0.0f;
 	float rotDeg = 0.0f;
-	GameTimer timer;
-	timer.Reset();
+
 
 
 
 	
 	SplinePath splinePath(positions);
-
+	Mesh cubeMesh = createCube();
+	Train train{engine, &cubeMesh, &splinePath };
 	LineDrawer splinePathDrawer(splinePath.GetSplinePoints(), true);
 
 
@@ -100,33 +96,10 @@ int main()
 	// main loop
 	while (!engine->isDone())
 	{
-		timer.Tick();
-		time += timer.GetDeltaTime();
-		//if (time > 1.0f)
-		//{
-		//	if (index < 8)
-		//	{
-		//		vec3 direction = normalize(positions[index] - CubePosition);
-		//		float yawRad = glm::atan(-direction.z, direction.x);
-		//		glm::quat qt(glm::vec3(glm::radians(0.0f), yawRad, glm::radians(0.0f)));
-		//		cube->setRotation(qt);
-		//		++index;
-		//	}
-		//	else
-		//	{
-		//		index = 0;
-		//	}
-
-		//	time = 0.0f;
-		//}
-
-
-
-
+		train.Update(engine->getDeltaTime());
 		engine->update();
 		engine->render();
 
-		//path_drawer.draw();
 		splinePathDrawer.draw();
 		engine->swap();
 

@@ -2,6 +2,7 @@
 #include <vector>
 #include <array>
 #include <glm/vec3.hpp>
+#include <random>
 
 
 static constexpr float splinePrecision = 0.05f;
@@ -10,10 +11,14 @@ static constexpr size_t NumPointsInSegment = static_cast<size_t>(1 / splinePreci
 class SplinePath
 {
 	std::vector<glm::vec3> mSplinePathPoints{};
+	std::mt19937 mPrng{ std::random_device{}() };
 
 public:
 	SplinePath(const std::vector<glm::vec3>& pathPoints);
 	const std::vector<glm::vec3>& GetSplinePoints() const noexcept { return mSplinePathPoints; }
+	glm::vec3 GetSplinePoint(size_t index) const;
+	glm::vec3 GetRandomPointOnSpline();
+	size_t GetNumPoints() const { return mSplinePathPoints.size(); }
 
 private:
 	std::array<glm::vec3, NumPointsInSegment> GetSplinePoints(const glm::vec3& v1, const glm::vec3& v2, const glm::vec3& v3, const glm::vec3& v4, float step);
