@@ -75,13 +75,13 @@
     <ClCompile Include="source\framework\utils.cpp">
       <Filter>source\framework</Filter>
     </ClCompile>
-    <ClCompile Include="source\Carriage.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="source\SplinePath.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\Train.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Wagon.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1249,13 +1249,13 @@
     <ClInclude Include="source\framework\utils.h">
       <Filter>source\framework</Filter>
     </ClInclude>
-    <ClInclude Include="source\Carriage.h">
-      <Filter>source</Filter>
-    </ClInclude>
     <ClInclude Include="source\SplinePath.h">
       <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="source\Train.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Wagon.h">
       <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>

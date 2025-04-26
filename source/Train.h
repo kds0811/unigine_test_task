@@ -1,6 +1,6 @@
 #pragma once
 #include <array>
-#include <Carriage.h>
+#include <Wagon.h>
 
 class vec3;
 class SplinePath;
@@ -8,9 +8,9 @@ class Engine;
 
 class Train
 {
-	static constexpr size_t mNumCarriages = 8;
-	static constexpr size_t mCarriageDistance = 2;
-	std::array<Carriage, mNumCarriages> mCarriages{};
+	static constexpr size_t mNumWagons = 8;
+	static constexpr size_t mWagonsDistance = 10;
+	std::array<Wagon, mNumWagons> mWagons{};
 
 public:
 	Train(Engine* engine,  Mesh* mesh, SplinePath* path);

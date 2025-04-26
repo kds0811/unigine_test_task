@@ -96,8 +96,8 @@ int main()
 	// main loop
 	while (!engine->isDone())
 	{
-		train.Update(engine->getDeltaTime());
 		engine->update();
+		train.Update(engine->getDeltaTime());
 		engine->render();
 
 		splinePathDrawer.draw();

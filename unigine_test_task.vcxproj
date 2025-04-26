@@ -94,7 +94,6 @@
   <ItemGroup>
     <ClCompile Include="include\glm\detail\glm.cpp" />
     <ClCompile Include="source/main.cpp" />
-    <ClCompile Include="source\Carriage.cpp" />
     <ClCompile Include="source\framework\camera.cpp" />
     <ClCompile Include="source\framework\engine.cpp" />
     <ClCompile Include="source\framework\filesystem.cpp" />
@@ -105,6 +104,7 @@
     <ClCompile Include="source\framework\utils.cpp" />
     <ClCompile Include="source\SplinePath.cpp" />
     <ClCompile Include="source\Train.cpp" />
+    <ClCompile Include="source\Wagon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shader.frag" />
@@ -489,7 +489,6 @@
     <ClInclude Include="include\GL\glxew.h" />
     <ClInclude Include="include\GL\wglew.h" />
     <ClInclude Include="include\KHR\khrplatform.h" />
-    <ClInclude Include="source\Carriage.h" />
     <ClInclude Include="source\framework\camera.h" />
     <ClInclude Include="source\framework\engine.h" />
     <ClInclude Include="source\framework\filesystem.h" />
@@ -499,6 +498,7 @@
     <ClInclude Include="source\framework\utils.h" />
     <ClInclude Include="source\SplinePath.h" />
     <ClInclude Include="source\Train.h" />
+    <ClInclude Include="source\Wagon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
