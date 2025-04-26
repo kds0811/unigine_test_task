@@ -78,6 +78,12 @@
     <ClCompile Include="source\GameTimer.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="Carriage.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="CarriageMovementComponent.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shader.frag">
@@ -1244,6 +1250,12 @@
       <Filter>source\framework</Filter>
     </ClInclude>
     <ClInclude Include="source\GameTimer.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="Carriage.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="CarriageMovementComponent.h">
       <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>

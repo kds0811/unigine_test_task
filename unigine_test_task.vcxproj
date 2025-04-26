@@ -92,6 +92,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Carriage.cpp" />
+    <ClCompile Include="CarriageMovementComponent.cpp" />
     <ClCompile Include="include\glm\detail\glm.cpp" />
     <ClCompile Include="source/main.cpp" />
     <ClCompile Include="source\framework\camera.cpp" />
@@ -240,6 +242,8 @@
     <None Include="include\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Carriage.h" />
+    <ClInclude Include="CarriageMovementComponent.h" />
     <ClInclude Include="include\glad\glad.h" />
     <ClInclude Include="include\GLFW\glfw3.h" />
     <ClInclude Include="include\GLFW\glfw3native.h" />
