@@ -33,21 +33,21 @@ void Wagon::Init(Engine* engine, Mesh* mesh, const glm::vec3& startPos, int dest
 
 void Wagon::Update(float deltaTime)
 {
-	UpdateMovement(deltaTime);
+	UpdatePosition(deltaTime);
 	UpdateRotation(deltaTime);
 }
 
-void Wagon::UpdateMovement(float deltaTime)
+void Wagon::UpdatePosition(float deltaTime)
 {
 	glm::vec3 vecToDestination = Math::CalculateDirectionVecToDest(mDestinationPosition, pObject->getPosition());
 
-	bool bDestinationIsForward = DestinationIsFront(vecToDestination); // check if the destination is ahead
+	bool bDestinationIsForward = IsDestinationAhead(vecToDestination); // check if the destination is ahead
 
 	// Since we correct the rotation of the Wagon towards the destination point, when the scalar product will be less than zero,
 	// it means that we have passed the point and it is necessary to assign the next one.
 	if (bDestinationIsForward)
 	{
-		CalculateOffsetAndSetPosition(vecToDestination, deltaTime); // if the destination is ahead, we just move to it.
+		MoveTowardsDestination(vecToDestination, deltaTime); // if the destination is ahead, we just move to it.
 	}
 	else
 	{
@@ -59,10 +59,10 @@ void Wagon::UpdateMovement(float deltaTime)
 			mDestinationIndex = mDestinationIndex + indexOffset;
 			mDestinationPosition = pSplinePath->GetNextPoint(mDestinationIndex);
 			vecToDestination = Math::CalculateDirectionVecToDest(mDestinationPosition, pObject->getPosition());
-			bDestinationIsForward = DestinationIsFront(vecToDestination);
+			bDestinationIsForward = IsDestinationAhead(vecToDestination);
 			++indexOffset;
 		}
-		CalculateOffsetAndSetPosition(vecToDestination, deltaTime);
+		MoveTowardsDestination(vecToDestination, deltaTime);
 		StartRotation(); // When a new destination point is obtained, start rotation
 	}
 }
@@ -87,12 +87,12 @@ void Wagon::UpdateRotation(float deltaTime)
 	pObject->setRotation(currentQuat);
 }
 
-bool Wagon::DestinationIsFront(const glm::vec3& vecToDest) const
+bool Wagon::IsDestinationAhead(const glm::vec3& vecToDest) const
 {
 	return glm::dot(vecToDest, mForwardVector) > 0;
 }
 
-void Wagon::CalculateOffsetAndSetPosition(const glm::vec3& vecToDest, float deltaTime)
+void Wagon::MoveTowardsDestination(const glm::vec3& vecToDest, float deltaTime)
 {
 	glm::vec3 offset = vecToDest * deltaTime * mSpeed;
 	pObject->setPosition(pObject->getPosition() + offset);
@@ -110,5 +110,3 @@ void Wagon::StartRotation()
 	mCurrentRotationProgress = 0.0f;
 	mIsRotating = true;
 }
-
-

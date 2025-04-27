@@ -19,7 +19,8 @@ void Rails::BuildRails(Engine* engine, Mesh* mesh, SplinePath* path)
 {
 	for (size_t i = 0; i < path->GetNumPoints(); ++i)
 	{
-		const auto direction = Math::CalculateDirectionVecToDest(path->GetNextPoint(i), path->GetSplinePoint(i));
+		const auto splinePoint = path->GetSplinePoint(i);
+		const auto direction = Math::CalculateDirectionVecToDest(path->GetNextPoint(i), splinePoint);
 		glm::vec3 rightVector{};
 
 		// Spawn right rail
@@ -31,9 +32,9 @@ void Rails::BuildRails(Engine* engine, Mesh* mesh, SplinePath* path)
 			pRailRight->setScale(mRailsScale);
 			pRailRight->setRotation(Math::CalculateDirectionQuat(direction));
 			rightVector = glm::cross(direction, glm::vec3{ 0.0f, 1.0f, 0.0f }); // find the right vector through cross product forward vector and up vector
-			glm::vec3 offsetR = rightVector * mRailsWidth;
-			glm::vec3 positionR = { path->GetSplinePoint(i).x + offsetR.x, mRailsY, path->GetSplinePoint(i).z + offsetR.z }; // new position = old position + offset by X and Z plane coordinates. Y height is fixed.
-			pRailRight->setPosition(positionR);
+			glm::vec3 offsetRightVec = rightVector * mRailsWidth;
+			glm::vec3 positionRight = { splinePoint.x + offsetRightVec.x, mRailsY, splinePoint.z + offsetRightVec.z }; // new position = old position + offset by X and Z plane coordinates. Y height is fixed.
+			pRailRight->setPosition(positionRight);
 		}
 
 		// Spawn left rail
@@ -45,9 +46,9 @@ void Rails::BuildRails(Engine* engine, Mesh* mesh, SplinePath* path)
 			pRailLeft->setScale(mRailsScale);
 			pRailLeft->setRotation(Math::CalculateDirectionQuat(direction));
 			glm::vec3 leftVector = rightVector * -1.0f;  // calculate the left vector, which is opposite to the right vector
-			glm::vec3 offsetL = leftVector * mRailsWidth;
-			glm::vec3 positionL = { path->GetSplinePoint(i).x + offsetL.x, mRailsY, path->GetSplinePoint(i).z + offsetL.z }; // new position = old position + offset by X and Z plane coordinates. Y height is fixed.
-			pRailLeft->setPosition(positionL);
+			glm::vec3 offsetLeftVec = leftVector * mRailsWidth;
+			glm::vec3 positionLeft = { splinePoint.x + offsetLeftVec.x, mRailsY, splinePoint.z + offsetLeftVec.z }; // new position = old position + offset by X and Z plane coordinates. Y height is fixed.
+			pRailLeft->setPosition(positionLeft);
 		}
 	}
 }

@@ -33,10 +33,10 @@ public:
 	void Update(float deltaTime);
 
 private:
-	void UpdateMovement(float deltaTime);
+	void UpdatePosition(float deltaTime);
 	void UpdateRotation(float deltaTime);
-	bool DestinationIsFront(const glm::vec3& vecToDest) const;
-	void CalculateOffsetAndSetPosition(const glm::vec3& vecToDest, float deltaTime);
+	bool IsDestinationAhead(const glm::vec3& vecToDest) const;
+	void MoveTowardsDestination(const glm::vec3& vecToDest, float deltaTime);
 	void StartRotation();
 
 };
