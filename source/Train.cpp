@@ -7,13 +7,13 @@
 Train::Train(Engine* engine, Mesh* mesh, SplinePath* path)
 {
 	assert(engine && mesh && path);
-	if (!engine || !mesh || !path) return; //can throw  exception or log  error depending on the coding standard in the project
+	if (!engine || !mesh || !path) return; //can throw  exception or log  error
 
 	for (int i = 0; i < mNumWagons; i++)
 	{
-		const auto position = path->GetSplinePoint(i * mWagonsDistance);
-		const int destinationIndex = i * mWagonsDistance + 1;
-		const auto destPosition = path->GetSplinePoint(destinationIndex);
+		const auto position = path->GetSplinePoint(i * mWagonsDistance); // getting a point on the spline to position the wagon
+		const int destinationIndex = i * mWagonsDistance + 1; // getting the index of the next point to move
+		const auto destPosition = path->GetSplinePoint(destinationIndex); // getting the next waypoint
 		mWagons[i].Init(engine, mesh, position, destinationIndex, destPosition, path);
 	}
 }

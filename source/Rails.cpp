@@ -19,52 +19,58 @@ void Rails::BuildRails(Engine* engine, Mesh* mesh, SplinePath* path)
 {
 	for (size_t i = 0; i < path->GetNumPoints(); ++i)
 	{
-		// Spawn right rail
-		Object* pRailR = engine->createObject(mesh);
-		assert(pRailR);
-
-		pRailR->setColor(mRailColor);
-		pRailR->setScale(mRailsScale);
 		const auto direction = Math::CalculateDirectionVecToDest(path->GetNextPoint(i), path->GetSplinePoint(i));
-		pRailR->setRotation(Math::CalculateDirectionQuat(direction));
+		glm::vec3 rightVector{};
 
-		glm::vec3 rightVector = glm::cross(direction, glm::vec3{ 0.0f, 1.0f, 0.0f });
-		glm::vec3 offsetR = rightVector * mRailsWidth;
-		glm::vec3 positionR = { path->GetSplinePoint(i).x + offsetR.x, -0.5f, path->GetSplinePoint(i).z + offsetR.z };
-		pRailR->setPosition(positionR);
+		// Spawn right rail
+		Object* pRailRight = engine->createObject(mesh);
+		assert(pRailRight);
+		if (pRailRight)
+		{
+			pRailRight->setColor(mRailColor);
+			pRailRight->setScale(mRailsScale);
+			pRailRight->setRotation(Math::CalculateDirectionQuat(direction));
+			rightVector = glm::cross(direction, glm::vec3{ 0.0f, 1.0f, 0.0f }); // find the right vector through cross product forward vector and up vector
+			glm::vec3 offsetR = rightVector * mRailsWidth;
+			glm::vec3 positionR = { path->GetSplinePoint(i).x + offsetR.x, mRailsY, path->GetSplinePoint(i).z + offsetR.z }; // new position = old position + offset by X and Z plane coordinates. Y height is fixed.
+			pRailRight->setPosition(positionR);
+		}
 
 		// Spawn left rail
-		Object* pRailL = engine->createObject(mesh);
-		assert(pRailL);
-		pRailL->setColor(mRailColor);
-		pRailL->setScale(mRailsScale);
-		pRailL->setRotation(Math::CalculateDirectionQuat(direction));
-		glm::vec3 leftVector = rightVector * -1.0f;
-		glm::vec3 offsetL = leftVector * mRailsWidth;
-		glm::vec3 positionL = { path->GetSplinePoint(i).x + offsetL.x, -0.5f, path->GetSplinePoint(i).z + offsetL.z };
-		pRailL->setPosition(positionL);
+		Object* pRailLeft = engine->createObject(mesh);
+		assert(pRailLeft);
+		if (pRailLeft)
+		{
+			pRailLeft->setColor(mRailColor);
+			pRailLeft->setScale(mRailsScale);
+			pRailLeft->setRotation(Math::CalculateDirectionQuat(direction));
+			glm::vec3 leftVector = rightVector * -1.0f;  // calculate the left vector, which is opposite to the right vector
+			glm::vec3 offsetL = leftVector * mRailsWidth;
+			glm::vec3 positionL = { path->GetSplinePoint(i).x + offsetL.x, mRailsY, path->GetSplinePoint(i).z + offsetL.z }; // new position = old position + offset by X and Z plane coordinates. Y height is fixed.
+			pRailLeft->setPosition(positionL);
+		}
 	}
 }
 
 void Rails::BuildSleepers(Engine* engine, Mesh* mesh, SplinePath* path)
 {
-	int sleepersWidth = path->GetNumPoints() / mNumSleepers;
+	int sleepersWidth = path->GetNumPoints() / mNumSleepers; // the distance can be counted in the number of control points, since we have a fixed distance between the control  points
 
-	for (size_t i = 0; i < path->GetNumPoints(); i += sleepersWidth)
+	for (size_t i = 0; i < path->GetNumPoints(); i += sleepersWidth) // each iteration of the loop we skip a number of points equal to sleepersWidth
 	{
 		Object* pSleeper = engine->createObject(mesh);
 		assert(pSleeper);
-
 		pSleeper->setColor(mSleeperColor);
 		pSleeper->setScale(mSleepersScale);
 
-		glm::vec3 direction = Math::CalculateDirectionVecToDest(path->GetNextPoint(i), path->GetSplinePoint(i));
-		float directionYaw = Math::CalculateYawFromVector(direction);
-		float rotatedYaw = directionYaw + glm::radians(90.0f);
+		glm::vec3 direction = Math::CalculateDirectionVecToDest(path->GetNextPoint(i), path->GetSplinePoint(i)); // calculate forward vector
+		float directionYaw = Math::CalculateYawFromVector(direction); // calculates the yaw of the forward vector in radians
+		float rotatedYaw = directionYaw + glm::radians(90.0f); // rotate yaw 90 degrees
 		glm::quat rotatedQuat = glm::quat(glm::vec3{ 0.0f, rotatedYaw, 0.0f });
-		pSleeper->setRotation(rotatedQuat);
-		glm::vec3 position{ path->GetSplinePoint(i).x, -0.52f, path->GetSplinePoint(i).z };
+		pSleeper->setRotation(rotatedQuat); 
+
+		const auto pos = path->GetSplinePoint(i);
+		glm::vec3 position{ pos.x, mSleepersY, pos.z }; // change only the height - Y coordinate
 		pSleeper->setPosition(position);
 	}
-
 }

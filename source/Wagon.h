@@ -9,18 +9,21 @@ class SplinePath;
 
 class Wagon
 {
+	// Pointers that do not own memory. Caching since every frame is needed.
 	Object* pObject = nullptr;
 	SplinePath* pSplinePath = nullptr;
 
+	// moving fields
 	static constexpr float mSpeed = 0.5f;
 	int mDestinationIndex = -1;
 	glm::vec3 mDestinationPosition{};
 	glm::vec3 mForwardVector{};
 
-	float mStartYaw{};
-	float mDestYaw{};
-	float mRotationSpeed = 0.1f;
-	float mCurrentProgress = 0.0f;
+	// rotation fields
+	float mStartYaw = 0.0f;
+	float mDestYaw = 0.0f;
+	float mRotationSpeed = 0.5f;
+	float mCurrentRotationProgress = 0.0f;
 	bool mIsRotating = false;
 
 public:
