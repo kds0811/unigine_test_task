@@ -19,7 +19,7 @@ class Wagon
 
 	float mStartYaw{};
 	float mDestYaw{};
-	float mRotationSpeed = 5.0f;
+	float mRotationSpeed = 0.5f;
 	float mCurrentProgress = 0.0f;
 	bool mIsRotating = false;
 
@@ -29,15 +29,11 @@ public:
 	void Init(Engine* engine, Mesh* mesh, const glm::vec3& startPos, int destinationIndex, const glm::vec3& destinationPosition, SplinePath* path);
 	void Update(float deltaTime);
 
-
 private:
 	void UpdateMovement(float deltaTime);
 	void UpdateRotation(float deltaTime);
-	glm::quat CalculateDirectionQuat(const glm::vec3& direction);
 	bool DestinationIsFront(const glm::vec3& vecToDest) const;
 	void CalculateOffsetAndSetPosition(const glm::vec3& vecToDest, float deltaTime);
-	glm::vec3 CalculateDirectionVecToDest() const;
-
 	void StartRotation();
-	float CalculateYawFromVector(const glm::vec3& vec);
+
 };

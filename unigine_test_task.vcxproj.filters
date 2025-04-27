@@ -84,6 +84,9 @@
     <ClCompile Include="source\Wagon.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\Rails.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shader.frag">
@@ -1256,6 +1259,12 @@
       <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="source\Wagon.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Rails.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\MathHelper.h">
       <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>

@@ -102,6 +102,7 @@
     <ClCompile Include="source\framework\object.cpp" />
     <ClCompile Include="source\framework\shader.cpp" />
     <ClCompile Include="source\framework\utils.cpp" />
+    <ClCompile Include="source\Rails.cpp" />
     <ClCompile Include="source\SplinePath.cpp" />
     <ClCompile Include="source\Train.cpp" />
     <ClCompile Include="source\Wagon.cpp" />
@@ -496,6 +497,8 @@
     <ClInclude Include="source\framework\object.h" />
     <ClInclude Include="source\framework\shader.h" />
     <ClInclude Include="source\framework\utils.h" />
+    <ClInclude Include="source\MathHelper.h" />
+    <ClInclude Include="source\Rails.h" />
     <ClInclude Include="source\SplinePath.h" />
     <ClInclude Include="source\Train.h" />
     <ClInclude Include="source\Wagon.h" />

@@ -21,12 +21,6 @@ glm::vec3 SplinePath::GetNextPoint(size_t currentIndex) const
 	return GetSplinePoint((currentIndex + 1) % GetNumPoints());
 }
 
-glm::vec3 SplinePath::GetRandomPointOnSpline() 
-{
-	assert(mSplinePathPoints.size() > 0);
-	std::uniform_int_distribution<size_t> randIndex{0, mSplinePathPoints.size() - 1};
-	return mSplinePathPoints[randIndex(mPrng)];
-}
 
 std::array<glm::vec3, NumPointsInSegment> SplinePath::GetSplinePoints(const glm::vec3& v1, const glm::vec3& v2, const glm::vec3& v3, const glm::vec3& v4, float step)
 {

@@ -2,6 +2,7 @@
 #include "framework/utils.h"
 #include "SplinePath.h"
 #include "Train.h"
+#include "Rails.h"
 
 using namespace std;
 using namespace glm;
@@ -30,6 +31,7 @@ int main()
 	// create shared meshes
 	Mesh plane_mesh = createPlane();
 	Mesh sphere_mesh = createSphere();
+	Mesh cubeMesh = createCube();
 
 	// create background objects
 	Object* plane = engine->createObject(&plane_mesh);
@@ -49,22 +51,9 @@ int main()
 		 4.0f, -0.375f, -3.0f, // 7
 		 8.0f, -0.375f,  7.0f  // 8
 	};
-	vector<Object*> points;
-	for (int i = 0; i < 8; i++)
-	{
-		Object* sphere = engine->createObject(&sphere_mesh);
-		sphere->setColor(1, 0, 0);
-		sphere->setPosition(path[i * 3], path[i * 3 + 1], path[i * 3 + 2]);
-		sphere->setScale(0.25f);
-		points.push_back(sphere);
-	}
-	LineDrawer path_drawer(path, points.size(), true);
-
-
-
 
 	std::vector<glm::vec3> positions{};
-
+	positions.reserve(8);
 	positions.push_back(glm::vec3{ 0.0f, -0.375f,  7.0f });
 	positions.push_back(glm::vec3{ -6.0f, -0.375f,  5.0f });
 	positions.push_back(glm::vec3{ -8.0f, -0.375f,  1.0f });
@@ -74,24 +63,10 @@ int main()
 	positions.push_back(glm::vec3{ 4.0f, -0.375f, -3.0f });
 	positions.push_back(glm::vec3{ 8.0f, -0.375f,  7.0f });
 
-	int index = 0;
-	float time = 0.0f;
-	int point = 1;
-	float s = 0.0f;
-	float rotDeg = 0.0f;
-
-
-
-
-	
 	SplinePath splinePath(positions);
-	Mesh cubeMesh = createCube();
+	Rails rails(engine, &cubeMesh, &splinePath);
 	Train train{engine, &cubeMesh, &splinePath };
 	LineDrawer splinePathDrawer(splinePath.GetSplinePoints(), true);
-
-
-
-
 
 	// main loop
 	while (!engine->isDone())

@@ -4,6 +4,7 @@
 #include <framework/engine.h>
 #include <framework/mesh.h>
 #include "SplinePath.h"
+#include "MathHelper.h"
 
 Wagon::Wagon()
 {}
@@ -17,11 +18,16 @@ void Wagon::Init(Engine* engine, Mesh* mesh, const glm::vec3& startPos, int dest
 	pSplinePath = path;
 
 	pObject = engine->createObject(mesh);
-	pObject->setColor(0.7f, 0.7f, 0.7f);
-	pObject->setScale(0.4f);
-	pObject->setPosition(startPos);
-	mForwardVector = CalculateDirectionVecToDest();
-	pObject->setRotation(CalculateDirectionQuat(mForwardVector));
+
+	assert(pObject);
+	if (pObject)
+	{
+		pObject->setColor(0.7f, 0.7f, 0.7f);
+		pObject->setScale(0.4f);
+		pObject->setPosition(startPos);
+		mForwardVector = Math::CalculateDirectionVecToDest(mDestinationPosition, pObject->getPosition());
+		pObject->setRotation(Math::CalculateDirectionQuat(mForwardVector));
+	}
 }
 
 void Wagon::Update(float deltaTime)
@@ -32,7 +38,7 @@ void Wagon::Update(float deltaTime)
 
 void Wagon::UpdateMovement(float deltaTime)
 {
-	glm::vec3 vecToDestination = CalculateDirectionVecToDest();
+	glm::vec3 vecToDestination = Math::CalculateDirectionVecToDest(mDestinationPosition, pObject->getPosition());
 	bool bDestinationIsForward = DestinationIsFront(vecToDestination);
 
 	// Since we correct the rotation of the Wagon towards the destination point, when the scalar product will be less than zero,
@@ -50,7 +56,7 @@ void Wagon::UpdateMovement(float deltaTime)
 		{
 			mDestinationIndex = mDestinationIndex + indexOffset;
 			mDestinationPosition = pSplinePath->GetNextPoint(mDestinationIndex);
-			vecToDestination = CalculateDirectionVecToDest();
+			vecToDestination = Math::CalculateDirectionVecToDest(mDestinationPosition, pObject->getPosition());
 			bDestinationIsForward = DestinationIsFront(vecToDestination);
 			++indexOffset;
 		}
@@ -78,11 +84,6 @@ void Wagon::UpdateRotation(float deltaTime)
 	pObject->setRotation(currentQuat);
 }
 
-glm::quat Wagon::CalculateDirectionQuat(const glm::vec3& direction)
-{
-	// Quaternion is created only with yaw angle because the rotation is in the X-Z plane around the Y axis.
-	return glm::quat(glm::vec3{ 0.0f, CalculateYawFromVector(direction), 0.0f});
-}
 
 bool Wagon::DestinationIsFront(const glm::vec3& vecToDest) const
 {
@@ -96,17 +97,15 @@ void Wagon::CalculateOffsetAndSetPosition(const glm::vec3& vecToDest, float delt
 	mForwardVector = vecToDest;
 }
 
-glm::vec3 Wagon::CalculateDirectionVecToDest() const
-{
-	return glm::normalize(mDestinationPosition - pObject->getPosition());
-}
 
 void Wagon::StartRotation()
 {
-	mStartYaw = CalculateYawFromVector(mForwardVector);;
-	mDestYaw = CalculateYawFromVector(CalculateDirectionVecToDest());
+	mStartYaw = Math::CalculateYawFromVector(mForwardVector);;
+	mDestYaw = Math::CalculateYawFromVector(Math::CalculateDirectionVecToDest(mDestinationPosition, pObject->getPosition()));
 
 	float deltaYaw = mDestYaw - mStartYaw;
+	if (std::abs(deltaYaw) < 0.0000001) return;
+
 	if (deltaYaw > glm::pi<float>())
 	{
 		deltaYaw -= 2.0f * glm::pi<float>();
@@ -121,15 +120,4 @@ void Wagon::StartRotation()
 	mIsRotating = true;
 }
 
-float Wagon::CalculateYawFromVector(const glm::vec3& vec)
-{
-	float yaw = glm::atan(-vec.z, vec.x); // -z because the base z-axis points backward;
-
-	if (yaw < 0.0f)
-	{
-		yaw += 2.0f * glm::pi<float>();
-	}
-
-	return yaw;
-}
 
