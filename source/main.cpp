@@ -40,17 +40,6 @@ int main()
 	plane->setRotation(-90.0f, 0.0f, 0.0f);
 	plane->setScale(20.0f);
 
-	// path
-	const float path[] = {
-		 0.0f, -0.375f,  7.0f, // 1
-		-6.0f, -0.375f,  5.0f, // 2
-		-8.0f, -0.375f,  1.0f, // 3
-		-4.0f, -0.375f, -6.0f, // 4
-		 0.0f, -0.375f, -7.0f, // 5
-		 1.0f, -0.375f, -4.0f, // 6
-		 4.0f, -0.375f, -3.0f, // 7
-		 8.0f, -0.375f,  7.0f  // 8
-	};
 
 	std::vector<glm::vec3> positions{};
 	positions.reserve(8);
