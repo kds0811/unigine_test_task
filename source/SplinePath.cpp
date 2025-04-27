@@ -2,12 +2,13 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/spline.hpp>
 #include <cassert>
+#include "MathHelper.h"
 
 
 SplinePath::SplinePath(const std::vector<glm::vec3>& pathPoints)
 {
 	BuildAllSplinePathPoints(pathPoints);
-	ResampleSplinePoints(splinePrecision);
+	RelaxPoints(100);
 }
 
 glm::vec3 SplinePath::GetSplinePoint(size_t index) const
@@ -19,6 +20,15 @@ glm::vec3 SplinePath::GetSplinePoint(size_t index) const
 glm::vec3 SplinePath::GetNextPoint(size_t currentIndex) const
 {
 	return GetSplinePoint((currentIndex + 1) % GetNumPoints());
+}
+
+glm::vec3 SplinePath::GetPrevPoint(size_t currentIndex) const
+{
+	if (currentIndex == 0)
+	{
+		return GetSplinePoint(GetNumPoints() - 1);
+	}
+	return GetSplinePoint((currentIndex - 1) % GetNumPoints());
 }
 
 
@@ -53,69 +63,20 @@ void  SplinePath::BuildAllSplinePathPoints(const std::vector<glm::vec3>& pathPoi
 	}
 }
 
-std::vector<float> SplinePath::ComputeArcLengths(const std::vector<glm::vec3>& splinePoints)
+
+void SplinePath::RelaxPoints(int iterations)
 {
-	std::vector<float> arcLengths;
-	arcLengths.reserve(GetNumPoints() + 1);
-	arcLengths.push_back(0.0f);
-	for (size_t i = 1; i < splinePoints.size(); ++i)
+	for (int iter = 0; iter < iterations; ++iter)
 	{
-		float segmentLength = glm::distance(splinePoints[i], splinePoints[i - 1]);
-		arcLengths.push_back(arcLengths.back() + segmentLength);
-	}
+		std::vector<glm::vec3> newPositions = mSplinePathPoints;
 
-	return arcLengths;
-}
-
-void SplinePath::ResampleSplinePoints(float desiredDistance)
-{
-	// Calculate arc lengths for current spline points
-	std::vector<float> arcLengths = ComputeArcLengths(mSplinePathPoints);
-	float totalLength = arcLengths.back();
-
-	// Generate new points with uniform spacing
-	std::vector<glm::vec3> resampledPoints;
-	size_t numPoints = static_cast<size_t>(totalLength / desiredDistance) + 1;
-	resampledPoints.reserve(numPoints);
-
-	for (size_t i = 0; i < numPoints; ++i)
-	{
-		float currentArcLength = i * desiredDistance;
-		resampledPoints.push_back(GetPositionAtArcLength(mSplinePathPoints, arcLengths, currentArcLength));
-	}
-
-	// Replacing old points with new ones
-	mSplinePathPoints = std::move(resampledPoints);
-}
-
-glm::vec3 SplinePath::GetPositionAtArcLength(const std::vector<glm::vec3>& splinePoints, const std::vector<float>& arcLengths, float currentArcLength)
-{
-	// Binary search to find the index corresponding to s
-	size_t low = 0, high = arcLengths.size() - 1;
-	while (low < high)
-	{
-		size_t mid = (low + high) / 2;
-		if (arcLengths[mid] < currentArcLength)
+		for (size_t i = 0; i < GetNumPoints(); ++i)
 		{
-			low = mid + 1;
+			glm::vec3 prevPoint = GetPrevPoint(i);
+			glm::vec3 nextPoint = GetNextPoint(i);
+			newPositions[i] = (prevPoint + nextPoint) * 0.5f;
 		}
-		else
-		{
-			high = mid;
-		}	
-	}
 
-	// Linear interpolation between two neighboring points
-	size_t idx = low;
-	if (idx == 0)
-	{
-		return splinePoints[0];
+		mSplinePathPoints = std::move(newPositions);
 	}
-	if (idx >= splinePoints.size())
-	{
-		return splinePoints.back();
-	}
-
-	float interpolationFactor = (currentArcLength - arcLengths[idx - 1]) / (arcLengths[idx] - arcLengths[idx - 1]);
-	return glm::mix(splinePoints[idx - 1], splinePoints[idx], interpolationFactor);
 }

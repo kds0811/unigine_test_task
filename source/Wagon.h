@@ -19,7 +19,7 @@ class Wagon
 
 	float mStartYaw{};
 	float mDestYaw{};
-	float mRotationSpeed = 0.5f;
+	float mRotationSpeed = 0.1f;
 	float mCurrentProgress = 0.0f;
 	bool mIsRotating = false;
 

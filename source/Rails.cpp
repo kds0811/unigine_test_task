@@ -67,6 +67,4 @@ void Rails::BuildSleepers(Engine* engine, Mesh* mesh, SplinePath* path)
 		pSleeper->setPosition(position);
 	}
 
-
-
 }
