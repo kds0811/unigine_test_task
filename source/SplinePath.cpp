@@ -33,33 +33,34 @@ glm::vec3 SplinePath::GetPrevPoint(size_t currentIndex) const
 	return GetSplinePoint((currentIndex - 1) % GetNumPoints());
 }
 
-
+// Creating a table of lengths of all spline segments
 void SplinePath::BuildArcLengthTable()
 {
 	mArcLengthTable.clear();
-	mArcLengthTable.push_back(0.0f);
+	mArcLengthTable.push_back(0.0f); // first length
 
-	double step = 1.0f / mNumSamples;
-	glm::vec3 prevPoint = GetPointAtT(0.0f);
+	double step = 1.0 / static_cast<double>(mNumSamples);
+	glm::vec3 prevPoint = GetPointAtT(0.0);
 
 	for (size_t i = 1; i <= mNumSamples; ++i)
 	{
-		double t = i * step;
+		double t = static_cast<double>(i) * step;
 		glm::vec3 currentPoint = GetPointAtT(t);
-		mTotalArcLength += glm::length(currentPoint - prevPoint);
-		mArcLengthTable.push_back(mTotalArcLength);
+		mTotalArcLength += glm::length(currentPoint - prevPoint); // Calculating the total length of the spline
+		mArcLengthTable.push_back(mTotalArcLength); // Adding the section length to the arc length table 
 		prevPoint = currentPoint;
 	}
 }
 
 float SplinePath::FindTByArcLength(float arcLength) const
 {
+	// handling corner casses
 	if (arcLength <= 0.0f) return 0.0f;
 	if (arcLength >= mTotalArcLength) return 1.0f;
 
+	// binary search for the closest arcLength value in the ArcLengthTable
 	size_t low = 0;
 	size_t high = mArcLengthTable.size() - 1;
-
 	while (low < high)
 	{
 		size_t mid = (low + high) / 2;
@@ -73,27 +74,29 @@ float SplinePath::FindTByArcLength(float arcLength) const
 		}
 	}
 
-	float tLow = static_cast<float>(low) / mNumSamples;
-	float tHigh = static_cast<float>(low + 1) / mNumSamples;
+	float tLow = static_cast<float>(low) / mNumSamples; // is the parameter t, corresponding to the lower boundary of the interval
+	float tHigh = static_cast<float>(low + 1) / mNumSamples; // is the parameter t corresponding to the upper boundary of the interval.
 
-	float lengthLow = mArcLengthTable[low];
-	float lengthHigh = mArcLengthTable[low + 1];
-	return glm::mix(tLow, tHigh, (arcLength - lengthLow) / (lengthHigh - lengthLow));
+	float lengthLow = mArcLengthTable[low]; // Arc length value at the lower boundary of the interval
+	float lengthHigh = mArcLengthTable[low + 1]; // // Arc length value at the upper boundary of the interval
+
+	// Linear interpolation between tLow and tHigh based on the relative position of arcLength
+	// inside the interval [lengthLow, lengthHigh]
+	// (arcLength - lengthLow) / (lengthHigh - lengthLow) is the relative position of arcLength within the interval
+	return glm::mix(tLow, tHigh, (arcLength - lengthLow) / (lengthHigh - lengthLow)); 
 }
 
 std::vector<glm::vec3> SplinePath::GenerateUniformPoints(size_t numPoints) const
 {
-	std::vector<glm::vec3> points;
+	std::vector<glm::vec3> points; // temp vector
 	points.reserve(numPoints + 1);
 
 	double step = mTotalArcLength / static_cast<double>(numPoints);
-
 	for (size_t i = 0; i < numPoints; ++i)
 	{
-		float arcLength = i * step;
+		float arcLength = static_cast<double>(i) * step;
 		points.push_back(GetPointAtArcLength(arcLength));
 	}
-
 	return points;
 }
 
