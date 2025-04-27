@@ -7,10 +7,11 @@ class SplinePath
 {
     std::vector<glm::vec3> mControlPoints{};
     std::vector<glm::vec3> mSplinePathPoints{};
+    std::vector<double> mArcLengthTable;
     double mAveragePointDistance = 0.0f;
-    std::vector<float> mArcLengthTable; 
-    float mTotalArcLength = 0.0f;
-    int mNumSamples = 1000;
+    double mTotalArcLength = 0.0f;
+    static constexpr int mNumSamples = 1000;
+    static constexpr int mSplineTotalPoints = 800;
 
 public:
     SplinePath(const std::vector<glm::vec3>& pathPoints);
@@ -24,7 +25,7 @@ private:
     void BuildArcLengthTable();
     float FindTByArcLength(float arcLength) const;
     std::vector<glm::vec3> GenerateUniformPoints(size_t numPoints) const;
-    glm::vec3 GetPointAtT(float t) const;
-    glm::vec3 GetPointAtArcLength(float arcLength) const;
+    glm::vec3 GetPointAtT(double t) const;
+    glm::vec3 GetPointAtArcLength(double arcLength) const;
 
 };

@@ -54,7 +54,7 @@ void Rails::BuildRails(Engine* engine, Mesh* mesh, SplinePath* path)
 
 void Rails::BuildSleepers(Engine* engine, Mesh* mesh, SplinePath* path)
 {
-	int sleepersWidth = path->GetNumPoints() / mNumSleepers; // the distance can be counted in the number of control points, since we have a fixed distance between the control  points
+	int sleepersWidth = static_cast<int>(path->GetNumPoints()) / mNumSleepers; // the distance can be counted in the number of control points, since we have a fixed distance between the control  points
 
 	for (size_t i = 0; i < path->GetNumPoints(); i += sleepersWidth) // each iteration of the loop we skip a number of points equal to sleepersWidth
 	{

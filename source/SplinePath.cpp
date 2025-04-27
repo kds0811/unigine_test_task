@@ -10,7 +10,7 @@ SplinePath::SplinePath(const std::vector<glm::vec3>& pathPoints)
 	mControlPoints(pathPoints)
 {
 	BuildArcLengthTable();
-	mSplinePathPoints = GenerateUniformPoints(799); 
+	mSplinePathPoints = GenerateUniformPoints(mSplineTotalPoints);
 }
 
 glm::vec3 SplinePath::GetSplinePoint(size_t index) const
@@ -39,12 +39,12 @@ void SplinePath::BuildArcLengthTable()
 	mArcLengthTable.clear();
 	mArcLengthTable.push_back(0.0f);
 
-	float step = 1.0f / mNumSamples;
+	double step = 1.0f / mNumSamples;
 	glm::vec3 prevPoint = GetPointAtT(0.0f);
 
 	for (size_t i = 1; i <= mNumSamples; ++i)
 	{
-		float t = i * step;
+		double t = i * step;
 		glm::vec3 currentPoint = GetPointAtT(t);
 		mTotalArcLength += glm::length(currentPoint - prevPoint);
 		mArcLengthTable.push_back(mTotalArcLength);
@@ -85,7 +85,8 @@ std::vector<glm::vec3> SplinePath::GenerateUniformPoints(size_t numPoints) const
 {
 	std::vector<glm::vec3> points;
 	points.reserve(numPoints + 1);
-	float step = mTotalArcLength / (numPoints - 1);
+
+	double step = mTotalArcLength / static_cast<double>(numPoints);
 
 	for (size_t i = 0; i < numPoints; ++i)
 	{
@@ -96,24 +97,27 @@ std::vector<glm::vec3> SplinePath::GenerateUniformPoints(size_t numPoints) const
 	return points;
 }
 
-glm::vec3 SplinePath::GetPointAtT(float t) const
+glm::vec3 SplinePath::GetPointAtT(double t) const
 {
-	size_t index0 = ((size_t)((t * mControlPoints.size()) - 1)) % mControlPoints.size();
-	size_t index1 = (size_t)(t * mControlPoints.size()) % mControlPoints.size();
-	size_t index2 = (size_t)((t * mControlPoints.size()) + 1) % mControlPoints.size();
-	size_t index3 = (size_t)((t * mControlPoints.size()) + 2) % mControlPoints.size();
+	int targetControlPoint = static_cast<int>(t * static_cast<int>(mControlPoints.size())); // cakculate target control points
 
-	return glm::catmullRom(
-		mControlPoints[index0],
-		mControlPoints[index1],
-		mControlPoints[index2],
-		mControlPoints[index3],
-		fmod(t * mControlPoints.size(), 1.0f));
+	int index0 = (targetControlPoint - 1);
+	if (index0 < 0) index0 += mControlPoints.size(); // handling corner case when the index is less than 0, we wrap it back to a valid array index
+
+	// processing of other indices, since they are all greater than 0, we loop their index into the correct array index
+	int index1 =  targetControlPoint      % static_cast<int>(mControlPoints.size());
+	int index2 = (targetControlPoint + 1) % static_cast<int>(mControlPoints.size());
+	int index3 = (targetControlPoint + 2) % static_cast<int>(mControlPoints.size());
+
+	// We get a specific point on the spline.
+	// The result of multiplying t by the number of control points is divided modulo 1.0f to leave only the fractional part,
+	// since this function takes values t[0, 1].
+	return glm::catmullRom(mControlPoints[index0], mControlPoints[index1], mControlPoints[index2], mControlPoints[index3], fmod(t * mControlPoints.size(), 1.0f));
 }
 
-glm::vec3 SplinePath::GetPointAtArcLength(float arcLength) const
+glm::vec3 SplinePath::GetPointAtArcLength(double arcLength) const
 {
-	float t = FindTByArcLength(arcLength);
+	double t = FindTByArcLength(arcLength);
 	return GetPointAtT(t);
 }
 

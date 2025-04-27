@@ -40,33 +40,34 @@ int main()
 	plane->setRotation(-90.0f, 0.0f, 0.0f);
 	plane->setScale(20.0f);
 
+	// create control points
+	std::vector<glm::vec3> ControlPoints{};
+	ControlPoints.reserve(8);
+	ControlPoints.push_back(glm::vec3{ 0.0f, -0.375f,  7.0f });
+	ControlPoints.push_back(glm::vec3{ -6.0f, -0.375f,  5.0f });
+	ControlPoints.push_back(glm::vec3{ -8.0f, -0.375f,  1.0f });
+	ControlPoints.push_back(glm::vec3{ -4.0f, -0.375f, -6.0f });
+	ControlPoints.push_back(glm::vec3{ 0.0f, -0.375f, -7.0f });
+	ControlPoints.push_back(glm::vec3{ 1.0f, -0.375f, -4.0f });
+	ControlPoints.push_back(glm::vec3{ 4.0f, -0.375f, -3.0f });
+	ControlPoints.push_back(glm::vec3{ 8.0f, -0.375f,  7.0f });
 
-	std::vector<glm::vec3> positions{};
-	positions.reserve(8);
-	positions.push_back(glm::vec3{ 0.0f, -0.375f,  7.0f });
-	positions.push_back(glm::vec3{ -6.0f, -0.375f,  5.0f });
-	positions.push_back(glm::vec3{ -8.0f, -0.375f,  1.0f });
-	positions.push_back(glm::vec3{ -4.0f, -0.375f, -6.0f });
-	positions.push_back(glm::vec3{ 0.0f, -0.375f, -7.0f });
-	positions.push_back(glm::vec3{ 1.0f, -0.375f, -4.0f });
-	positions.push_back(glm::vec3{ 4.0f, -0.375f, -3.0f });
-	positions.push_back(glm::vec3{ 8.0f, -0.375f,  7.0f });
+	// create spline
+	SplinePath splinePath(ControlPoints);
 
-	SplinePath splinePath(positions);
+	// create rails and sleepers
 	Rails rails(engine, &cubeMesh, &splinePath);
+
+	// create train and wagons
 	Train train{engine, &cubeMesh, &splinePath };
-	LineDrawer splinePathDrawer(splinePath.GetSplinePoints(), true);
 
 	// main loop
 	while (!engine->isDone())
 	{
 		engine->update();
-		train.Update(engine->getDeltaTime());
+		train.Update(engine->getDeltaTime()); // update moving and rotating train
 		engine->render();
-
-		splinePathDrawer.draw();
 		engine->swap();
-
 	}
 
 	engine->shutdown();
